@@ -15,6 +15,7 @@ import premium.domen.Risk;
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringJUnitConfig(classes = {CalculatePremiumService.class,
@@ -35,11 +36,11 @@ public class CalculatePremiumServiceTest {
 
     @Test
     public void contextStarUp() {
-        System.out.println(context);
+        assertNotNull(context);
     }
 
     @Test
-    public void test_1() {
+    public void test_OneFireRisk_OneTheftRisk_1() {
         PolicySubObject policySubObject_1 = new PolicySubObject("Item_1",
                 new BigDecimal("100.00"), Risk.FIRE);
         PolicySubObject policySubObject_2 = new PolicySubObject("Item_2",
@@ -55,7 +56,7 @@ public class CalculatePremiumServiceTest {
     }
 
     @Test
-    public void test_2() {
+    public void test_OneFireRisk_OneTheftRisk_2() {
         PolicySubObject policySubObject_1 = new PolicySubObject("Item_1",
                 new BigDecimal("500.00"), Risk.FIRE);
         PolicySubObject policySubObject_2 = new PolicySubObject("Item_2",
@@ -68,5 +69,20 @@ public class CalculatePremiumServiceTest {
         BigDecimal premium = calculatePremiumService.premiumCalculate(policy);
 
         assertEquals(new BigDecimal("17.13"), premium);
+    }
+
+    @Test
+    public void noPolicyObject() {
+        BigDecimal premium = calculatePremiumService.premiumCalculate(policy);
+
+        assertEquals(new BigDecimal("0.00"), premium);
+    }
+
+    @Test
+    public void noPolicySubObject() {
+        policy.addPolicyObject(policyObject);
+        BigDecimal premium = calculatePremiumService.premiumCalculate(policy);
+
+        assertEquals(new BigDecimal("0.00"), premium);
     }
 }

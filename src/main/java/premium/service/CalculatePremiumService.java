@@ -14,7 +14,7 @@ public class CalculatePremiumService {
     private TheftRiskCalculateService theftRiskCalculateService;
 
     public BigDecimal premiumCalculate(Policy policy) {
-        if (policy == null) {
+        if (policy.getPolicyObjectList().size() == 0) {
             return new BigDecimal("0.00");
         }
         BigDecimal firePremium = fireRiskCalculateService.calculateFireRisk(policy);
