@@ -2,6 +2,7 @@ package premium.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import premium.CalculatePremium;
 import premium.domen.Policy;
 import premium.domen.PolicyObject;
 
@@ -10,13 +11,14 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service
-public class CalculatePremiumService {
+class CalculatePremiumService implements CalculatePremium {
     @Autowired
     private FireRiskCalculateService fireRiskCalculateService;
     @Autowired
     private TheftRiskCalculateService theftRiskCalculateService;
 
-    public BigDecimal premiumCalculate(Policy policy) {
+    @Override
+    public BigDecimal calculate(Policy policy) {
         if (isPolicyObjectNoLoaded(policy)) {
             return new BigDecimal("0.00");
         }

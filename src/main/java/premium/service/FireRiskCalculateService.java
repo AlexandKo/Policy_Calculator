@@ -11,7 +11,7 @@ import java.math.RoundingMode;
 import java.util.List;
 
 @Service
-public class FireRiskCalculateService {
+class FireRiskCalculateService {
     @Autowired
     private PolicySubObjectsRisk policySubObjectsRisk;
     @Autowired

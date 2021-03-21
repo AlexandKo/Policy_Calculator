@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import premium.CalculatePremium;
 import premium.domen.*;
 
 import java.math.BigDecimal;
@@ -17,9 +18,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringJUnitConfig(classes = {CalculatePremiumService.class, PolicySubObjectsRisk.class, CalculateRiskSum.class,
         FireRiskCalculateService.class, TheftRiskCalculateService.class})
-public class CalculatePremiumServiceTest {
+public class CalculatePremiumTest {
     @Autowired
-    private CalculatePremiumService calculatePremiumService;
+    private CalculatePremium calculatePremium;
     @Autowired
     private ApplicationContext context;
     private Policy policy;
@@ -47,7 +48,7 @@ public class CalculatePremiumServiceTest {
         policyObject.addSubObject(policySubObject_2);
         policy.addPolicyObject(policyObject);
 
-        BigDecimal premium = calculatePremiumService.premiumCalculate(policy);
+        BigDecimal premium = calculatePremium.calculate(policy);
 
         assertEquals(new BigDecimal("2.28"), premium);
     }
@@ -63,14 +64,14 @@ public class CalculatePremiumServiceTest {
         policyObject.addSubObject(policySubObject_2);
         policy.addPolicyObject(policyObject);
 
-        BigDecimal premium = calculatePremiumService.premiumCalculate(policy);
+        BigDecimal premium = calculatePremium.calculate(policy);
 
         assertEquals(new BigDecimal("17.13"), premium);
     }
 
     @Test
     public void noPolicyObject() {
-        BigDecimal premium = calculatePremiumService.premiumCalculate(policy);
+        BigDecimal premium = calculatePremium.calculate(policy);
 
         assertEquals(new BigDecimal("0.00"), premium);
     }
@@ -78,7 +79,7 @@ public class CalculatePremiumServiceTest {
     @Test
     public void noPolicySubObject() {
         policy.addPolicyObject(policyObject);
-        BigDecimal premium = calculatePremiumService.premiumCalculate(policy);
+        BigDecimal premium = calculatePremium.calculate(policy);
 
         assertEquals(new BigDecimal("0.00"), premium);
     }
@@ -91,7 +92,7 @@ public class CalculatePremiumServiceTest {
 
         policy.addPolicyObject(policyObject);
 
-        BigDecimal premium = calculatePremiumService.premiumCalculate(policy);
+        BigDecimal premium = calculatePremium.calculate(policy);
 
         assertEquals(new BigDecimal("0.22"), premium);
     }
@@ -104,7 +105,7 @@ public class CalculatePremiumServiceTest {
 
         policy.addPolicyObject(policyObject);
 
-        BigDecimal premium = calculatePremiumService.premiumCalculate(policy);
+        BigDecimal premium = calculatePremium.calculate(policy);
 
         assertEquals(new BigDecimal("7.22"), premium);
     }
@@ -117,7 +118,7 @@ public class CalculatePremiumServiceTest {
 
         policy.addPolicyObject(policyObject);
 
-        BigDecimal premium = calculatePremiumService.premiumCalculate(policy);
+        BigDecimal premium = calculatePremium.calculate(policy);
 
         assertEquals(new BigDecimal("1.15"), premium);
     }
@@ -130,7 +131,7 @@ public class CalculatePremiumServiceTest {
 
         policy.addPolicyObject(policyObject);
 
-        BigDecimal premium = calculatePremiumService.premiumCalculate(policy);
+        BigDecimal premium = calculatePremium.calculate(policy);
 
         assertEquals(new BigDecimal("12.03"), premium);
     }
@@ -146,7 +147,7 @@ public class CalculatePremiumServiceTest {
 
         policy.addPolicyObject(policyObject);
 
-        BigDecimal premium = calculatePremiumService.premiumCalculate(policy);
+        BigDecimal premium = calculatePremium.calculate(policy);
 
         assertEquals(new BigDecimal("19.25"), premium);
     }
@@ -164,7 +165,7 @@ public class CalculatePremiumServiceTest {
         nextPolicyObject.addSubObject(new PolicySubObject("Item_6", new BigDecimal("149.44"), Risk.THEFT));
         policy.addPolicyObject(nextPolicyObject);
 
-        BigDecimal premium = calculatePremiumService.premiumCalculate(policy);
+        BigDecimal premium = calculatePremium.calculate(policy);
 
         assertEquals(new BigDecimal("19.25"), premium);
     }
@@ -179,7 +180,7 @@ public class CalculatePremiumServiceTest {
         nextPolicyObject.addSubObject(new PolicySubObject("Item_6", new BigDecimal("149.44"), Risk.THEFT));
         policy.addPolicyObject(nextPolicyObject);
 
-        BigDecimal premium = calculatePremiumService.premiumCalculate(policy);
+        BigDecimal premium = calculatePremium.calculate(policy);
 
         assertEquals(new BigDecimal("12.03"), premium);
     }
@@ -194,7 +195,7 @@ public class CalculatePremiumServiceTest {
         policy.addPolicyObject(new PolicyObject());
         policy.setPolicyStatus(PolicyStatus.REGISTERED);
 
-        BigDecimal premium = calculatePremiumService.premiumCalculate(policy);
+        BigDecimal premium = calculatePremium.calculate(policy);
 
         assertEquals(new BigDecimal("7.22"), premium);
     }
@@ -216,7 +217,7 @@ public class CalculatePremiumServiceTest {
         policy.addPolicyObject(policyObject_3);
         policy.setPolicyStatus(PolicyStatus.APPROVED);
 
-        BigDecimal premium = calculatePremiumService.premiumCalculate(policy);
+        BigDecimal premium = calculatePremium.calculate(policy);
 
         assertEquals(new BigDecimal("6.84"), premium);
     }

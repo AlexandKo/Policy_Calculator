@@ -3,57 +3,59 @@ package premium.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 import premium.domen.PolicyObject;
 import premium.domen.PolicySubObject;
 import premium.domen.Risk;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringJUnitConfig(classes = {TheftRiskCalculateService.class, PolicySubObjectsRisk.class, CalculateRiskSum.class})
+@RunWith(MockitoJUnitRunner.class)
 class TheftRiskCalculateServiceTest {
-    @Autowired
-    private TheftRiskCalculateService theftRiskCalculateService;
-    @Autowired
-    private ApplicationContext context;
     private PolicyObject policyObject;
+    @Mock
+    private PolicySubObjectsRisk policySubObjectsRisk;
+    @Mock
+    private CalculateRiskSum calculateRiskSum;
+    @InjectMocks
+    private TheftRiskCalculateService theftRiskCalculateService;
 
     @BeforeEach
     public void startUp() {
+        MockitoAnnotations.openMocks(this);
         policyObject = new PolicyObject();
     }
 
     @Test
-    public void contextStarUp() {
-        assertNotNull(context);
-    }
-
-
-    @Test
     public void theftRiskLess_15() {
-        PolicySubObject policySubObject = new PolicySubObject("Item_1",
-                new BigDecimal("3.12"), Risk.THEFT);
+        policyObject.addSubObject(new PolicySubObject("Item_1", new BigDecimal("3.82"), Risk.THEFT));
+        List<PolicySubObject> fireRiskSubObject = new ArrayList<>();
+        fireRiskSubObject.add(new PolicySubObject("Item_1", new BigDecimal("3.82"), Risk.THEFT));
 
-        policyObject.addSubObject(policySubObject);
+        Mockito.when(policySubObjectsRisk.getRiskSubObjects(policyObject, Risk.THEFT)).thenReturn(fireRiskSubObject);
+        Mockito.when(calculateRiskSum.calculateRiskSum(fireRiskSubObject)).thenReturn(new BigDecimal("3.82"));
 
         BigDecimal theftRiskPremium = theftRiskCalculateService.calculateTheftRisk(policyObject);
 
-        assertEquals(new BigDecimal("0.34"), theftRiskPremium);
+        assertEquals(new BigDecimal("0.42"), theftRiskPremium);
     }
 
     @Test
     public void theftRiskEqual_15() {
-        PolicySubObject policySubObject = new PolicySubObject("Item_1",
-                new BigDecimal("15.00"), Risk.THEFT);
+        policyObject.addSubObject(new PolicySubObject("Item_1", new BigDecimal("15.00"), Risk.THEFT));
+        List<PolicySubObject> fireRiskSubObject = new ArrayList<>();
+        fireRiskSubObject.add(new PolicySubObject("Item_1", new BigDecimal("15.00"), Risk.THEFT));
 
-        policyObject.addSubObject(policySubObject);
+        Mockito.when(policySubObjectsRisk.getRiskSubObjects(policyObject, Risk.THEFT)).thenReturn(fireRiskSubObject);
+        Mockito.when(calculateRiskSum.calculateRiskSum(fireRiskSubObject)).thenReturn(new BigDecimal("15.00"));
 
         BigDecimal theftRiskPremium = theftRiskCalculateService.calculateTheftRisk(policyObject);
 
@@ -62,85 +64,15 @@ class TheftRiskCalculateServiceTest {
 
     @Test
     public void theftRiskMore_15() {
-        PolicySubObject policySubObject = new PolicySubObject("Item_1",
-                new BigDecimal("20.44"), Risk.THEFT);
+        policyObject.addSubObject(new PolicySubObject("Item_1", new BigDecimal("254.33"), Risk.THEFT));
+        List<PolicySubObject> fireRiskSubObject = new ArrayList<>();
+        fireRiskSubObject.add(new PolicySubObject("Item_1", new BigDecimal("254.33"), Risk.THEFT));
 
-        policyObject.addSubObject(policySubObject);
-
-        BigDecimal theftRiskPremium = theftRiskCalculateService.calculateTheftRisk(policyObject);
-
-        assertEquals(new BigDecimal("1.02"), theftRiskPremium);
-    }
-
-    @Test
-    public void noTheftRisk() {
-        PolicySubObject policySubObject = new PolicySubObject("Item_1",
-                new BigDecimal("20.44"), Risk.FIRE);
-
-        policyObject.addSubObject(policySubObject);
+        Mockito.when(policySubObjectsRisk.getRiskSubObjects(policyObject, Risk.THEFT)).thenReturn(fireRiskSubObject);
+        Mockito.when(calculateRiskSum.calculateRiskSum(fireRiskSubObject)).thenReturn(new BigDecimal("254.33"));
 
         BigDecimal theftRiskPremium = theftRiskCalculateService.calculateTheftRisk(policyObject);
 
-        assertEquals(new BigDecimal("0.00"), theftRiskPremium);
-    }
-
-    @Test
-    public void twoTheftSubObjects_less_15() {
-        PolicySubObject policySubObject_1 = new PolicySubObject("Item_1",
-                new BigDecimal("3.99"), Risk.THEFT);
-        PolicySubObject policySubObject_2 = new PolicySubObject("Item_2",
-                new BigDecimal("4.08"), Risk.THEFT);
-
-        policyObject.addSubObject(policySubObject_1);
-        policyObject.addSubObject(policySubObject_2);
-
-        BigDecimal theftRiskPremium = theftRiskCalculateService.calculateTheftRisk(policyObject);
-
-        assertEquals(new BigDecimal("0.89"), theftRiskPremium);
-    }
-
-    @Test
-    public void twoTheftSubObjects_equal_15() {
-        PolicySubObject policySubObject_1 = new PolicySubObject("Item_1",
-                new BigDecimal("8.21"), Risk.THEFT);
-        PolicySubObject policySubObject_2 = new PolicySubObject("Item_2",
-                new BigDecimal("6.79"), Risk.THEFT);
-
-        policyObject.addSubObject(policySubObject_1);
-        policyObject.addSubObject(policySubObject_2);
-
-        BigDecimal theftRiskPremium = theftRiskCalculateService.calculateTheftRisk(policyObject);
-
-        assertEquals(new BigDecimal("0.75"), theftRiskPremium);
-    }
-
-    @Test
-    public void twoTheftSubObjects_more_15() {
-        PolicySubObject policySubObject_1 = new PolicySubObject("Item_1",
-                new BigDecimal("19.04"), Risk.THEFT);
-        PolicySubObject policySubObject_2 = new PolicySubObject("Item_2",
-                new BigDecimal("148.66"), Risk.THEFT);
-
-        policyObject.addSubObject(policySubObject_1);
-        policyObject.addSubObject(policySubObject_2);
-
-        BigDecimal theftRiskPremium = theftRiskCalculateService.calculateTheftRisk(policyObject);
-
-        assertEquals(new BigDecimal("8.39"), theftRiskPremium);
-    }
-
-    @Test
-    public void twoTheftSubObjects_more_15_SumRound() {
-        PolicySubObject policySubObject_1 = new PolicySubObject("Item_1",
-                new BigDecimal("19.04"), Risk.THEFT);
-        PolicySubObject policySubObject_2 = new PolicySubObject("Item_2",
-                new BigDecimal("148.669"), Risk.THEFT);
-
-        policyObject.addSubObject(policySubObject_1);
-        policyObject.addSubObject(policySubObject_2);
-
-        BigDecimal theftRiskPremium = theftRiskCalculateService.calculateTheftRisk(policyObject);
-
-        assertEquals(new BigDecimal("8.39"), theftRiskPremium);
+        assertEquals(new BigDecimal("12.72"), theftRiskPremium);
     }
 }

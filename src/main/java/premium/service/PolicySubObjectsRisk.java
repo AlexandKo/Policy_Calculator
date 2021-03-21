@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class PolicySubObjectsRisk {
+class PolicySubObjectsRisk {
 
     protected List<PolicySubObject> getRiskSubObjects(PolicyObject policyObject, Risk risk) {
         List<PolicySubObject> policySubObjects = policyObject.getSubObjectList();

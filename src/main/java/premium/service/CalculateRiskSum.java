@@ -8,7 +8,7 @@ import java.math.RoundingMode;
 import java.util.List;
 
 @Component
-public class CalculateRiskSum {
+class CalculateRiskSum {
 
     protected BigDecimal calculateRiskSum(List<PolicySubObject> subObjects) {
         return subObjects.stream()
