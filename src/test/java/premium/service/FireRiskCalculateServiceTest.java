@@ -2,7 +2,11 @@ package premium.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import premium.domen.Policy;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import premium.domen.PolicyObject;
 import premium.domen.PolicySubObject;
 import premium.domen.Risk;
@@ -10,16 +14,25 @@ import premium.domen.Risk;
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringJUnitConfig(classes = {FireRiskCalculateService.class, PolicySubObjectsRisk.class, CalculateRiskSum.class})
 class FireRiskCalculateServiceTest {
-    private final FireRiskCalculateService fireRiskCalculateService = new FireRiskCalculateService();
-    private Policy policy;
+    @Autowired
+    private FireRiskCalculateService fireRiskCalculateService;
+    @Autowired
+    private ApplicationContext context;
     private PolicyObject policyObject;
 
     @BeforeEach
     public void startUp() {
-        policy = new Policy();
         policyObject = new PolicyObject();
+    }
+
+    @Test
+    public void contextStarUp() {
+        assertNotNull(context);
     }
 
     @Test
@@ -28,9 +41,8 @@ class FireRiskCalculateServiceTest {
                 new BigDecimal("85.55"), Risk.FIRE);
 
         policyObject.addSubObject(policySubObject);
-        policy.addPolicyObject(policyObject);
 
-        BigDecimal fireRiskPremium = fireRiskCalculateService.calculateFireRisk(policy);
+        BigDecimal fireRiskPremium = fireRiskCalculateService.calculateFireRisk(policyObject);
 
         assertEquals(new BigDecimal("1.20"), fireRiskPremium);
     }
@@ -41,9 +53,8 @@ class FireRiskCalculateServiceTest {
                 new BigDecimal("100.00"), Risk.FIRE);
 
         policyObject.addSubObject(policySubObject);
-        policy.addPolicyObject(policyObject);
 
-        BigDecimal fireRiskPremium = fireRiskCalculateService.calculateFireRisk(policy);
+        BigDecimal fireRiskPremium = fireRiskCalculateService.calculateFireRisk(policyObject);
 
         assertEquals(new BigDecimal("1.40"), fireRiskPremium);
     }
@@ -54,9 +65,8 @@ class FireRiskCalculateServiceTest {
                 new BigDecimal("150.55"), Risk.FIRE);
 
         policyObject.addSubObject(policySubObject);
-        policy.addPolicyObject(policyObject);
 
-        BigDecimal fireRiskPremium = fireRiskCalculateService.calculateFireRisk(policy);
+        BigDecimal fireRiskPremium = fireRiskCalculateService.calculateFireRisk(policyObject);
 
         assertEquals(new BigDecimal("3.61"), fireRiskPremium);
     }
@@ -67,9 +77,8 @@ class FireRiskCalculateServiceTest {
                 new BigDecimal("150.55"), Risk.THEFT);
 
         policyObject.addSubObject(policySubObject);
-        policy.addPolicyObject(policyObject);
 
-        BigDecimal fireRiskPremium = fireRiskCalculateService.calculateFireRisk(policy);
+        BigDecimal fireRiskPremium = fireRiskCalculateService.calculateFireRisk(policyObject);
 
         assertEquals(new BigDecimal("0.00"), fireRiskPremium);
     }
@@ -84,9 +93,8 @@ class FireRiskCalculateServiceTest {
 
         policyObject.addSubObject(policySubObject_1);
         policyObject.addSubObject(policySubObject_2);
-        policy.addPolicyObject(policyObject);
 
-        BigDecimal fireRiskPremium = fireRiskCalculateService.calculateFireRisk(policy);
+        BigDecimal fireRiskPremium = fireRiskCalculateService.calculateFireRisk(policyObject);
 
         assertEquals(new BigDecimal("0.65"), fireRiskPremium);
     }
@@ -101,9 +109,8 @@ class FireRiskCalculateServiceTest {
 
         policyObject.addSubObject(policySubObject_1);
         policyObject.addSubObject(policySubObject_2);
-        policy.addPolicyObject(policyObject);
 
-        BigDecimal fireRiskPremium = fireRiskCalculateService.calculateFireRisk(policy);
+        BigDecimal fireRiskPremium = fireRiskCalculateService.calculateFireRisk(policyObject);
 
         assertEquals(new BigDecimal("1.40"), fireRiskPremium);
     }
@@ -118,9 +125,8 @@ class FireRiskCalculateServiceTest {
 
         policyObject.addSubObject(policySubObject_1);
         policyObject.addSubObject(policySubObject_2);
-        policy.addPolicyObject(policyObject);
 
-        BigDecimal fireRiskPremium = fireRiskCalculateService.calculateFireRisk(policy);
+        BigDecimal fireRiskPremium = fireRiskCalculateService.calculateFireRisk(policyObject);
 
         assertEquals(new BigDecimal("9.44"), fireRiskPremium);
     }
@@ -135,9 +141,8 @@ class FireRiskCalculateServiceTest {
 
         policyObject.addSubObject(policySubObject_1);
         policyObject.addSubObject(policySubObject_2);
-        policy.addPolicyObject(policyObject);
 
-        BigDecimal fireRiskPremium = fireRiskCalculateService.calculateFireRisk(policy);
+        BigDecimal fireRiskPremium = fireRiskCalculateService.calculateFireRisk(policyObject);
 
         assertEquals(new BigDecimal("9.44"), fireRiskPremium);
     }
