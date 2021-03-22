@@ -29,7 +29,9 @@ class CalculatePremiumService implements CalculatePremium {
         policyObjects.forEach(policyObject -> {
             BigDecimal firePremium = fireRiskCalculateService.calculateFireRisk(policyObject);
             BigDecimal theftPremium = theftRiskCalculateService.calculateTheftRisk(policyObject);
-            premium.updateAndGet(policyPremium -> policyPremium.add(firePremium.add(theftPremium)));
+            premium.updateAndGet(policyPremium -> policyPremium
+                    .add(firePremium)
+                    .add(theftPremium));
         });
         return premium.get();
     }
