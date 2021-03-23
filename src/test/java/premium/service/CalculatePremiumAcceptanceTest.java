@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import premium.CalculatePremium;
 import premium.domen.*;
 
 import java.math.BigDecimal;
@@ -18,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringJUnitConfig(classes = {CalculatePremiumService.class, PolicySubObjectsRisk.class, CalculateRiskSum.class,
         FireRiskCalculateService.class, TheftRiskCalculateService.class})
-public class CalculatePremiumTest {
+public class CalculatePremiumAcceptanceTest {
     @Autowired
     private CalculatePremium calculatePremium;
     @Autowired

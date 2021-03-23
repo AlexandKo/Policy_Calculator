@@ -1,4 +1,4 @@
-package premium;
+package premium.service;
 
 import premium.domen.Policy;
 

@@ -2,7 +2,6 @@ package premium.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import premium.CalculatePremium;
 import premium.domen.Policy;
 import premium.domen.PolicyObject;
 

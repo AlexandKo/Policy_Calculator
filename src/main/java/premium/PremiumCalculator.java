@@ -3,6 +3,7 @@ package premium;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import premium.domen.Policy;
+import premium.service.CalculatePremium;
 
 import java.math.BigDecimal;
 
